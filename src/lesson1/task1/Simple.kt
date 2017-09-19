@@ -62,7 +62,7 @@ fun seconds(hours: Int, minutes: Int, seconds: Int): Int = 3600 * hours + 60 * m
  * Определить длину того же отрезка в метрах (в данном случае 18.98).
  * 1 сажень = 3 аршина = 48 вершков, 1 вершок = 4.445 см.
  */
-fun lengthInMeters(sagenes: Int, arshins: Int, vershoks: Int): Double = 4.445 * (48 * sagenes + 16 * arshins + vershoks)
+fun lengthInMeters(sagenes: Int, arshins: Int, vershoks: Int): Double = 0.04445 * (48 * sagenes + 16 * arshins + vershoks)
 
 /**
  * Тривиальная
@@ -70,7 +70,7 @@ fun lengthInMeters(sagenes: Int, arshins: Int, vershoks: Int): Double = 4.445 * 
  * Пользователь задает угол в градусах, минутах и секундах (например, 36 градусов 14 минут 35 секунд).
  * Вывести значение того же угла в радианах (например, 0.63256).
  */
-fun angleInRadian(grad: Int, min: Int, sec: Int): Double = Math.PI * (grad / 180 + min / (180 * 60) + sec / (180 * 60 * 60))
+fun angleInRadian(grad: Int, min: Int, sec: Int): Double = (grad + min / 60.0 + sec / 3600.0) * Math.PI / 180
 
 
 /**
@@ -114,3 +114,4 @@ fun accountInThreeYears(initial: Int, percent: Int): Double = initial * pow(1 + 
  *Необходимо вывести число, полученное из заданного перестановкой цифр в обратном порядке (например, 874).
  */
 fun numberRevert(number: Int): Int = (number % 10) * 100 + ((number / 10) % 10) * 10 + (number / 100)
+
