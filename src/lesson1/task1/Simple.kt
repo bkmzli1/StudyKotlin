@@ -1,7 +1,9 @@
 @file:Suppress("UNUSED_PARAMETER")
+
 package lesson1.task1
 
-import java.lang.Math.*
+import java.lang.Math.pow
+import java.lang.Math.sqrt
 
 /**
  * Пример
@@ -85,7 +87,7 @@ fun trackLength(x1: Double, y1: Double, x2: Double, y2: Double): Double = sqrt(s
  * Пользователь задает целое число, большее 100 (например, 3801).
  * Определить третью цифру справа в этом числе (в данном случае 8).
  */
-fun thirdDigit(number: Int): Int = (number/100)%10
+fun thirdDigit(number: Int): Int = (number / 100) % 10
 
 /**
  * Простая
@@ -111,4 +113,4 @@ fun accountInThreeYears(initial: Int, percent: Int): Double = initial * pow(1 + 
  * Пользователь задает целое трехзначное число (например, 478).
  *Необходимо вывести число, полученное из заданного перестановкой цифр в обратном порядке (например, 874).
  */
-fun numberRevert(number: Int): Int = (number%10)*100 + ((number/10)%10)*10 + (number/100)
+fun numberRevert(number: Int): Int = (number % 10) * 100 + ((number / 10) % 10) * 10 + (number / 100)
