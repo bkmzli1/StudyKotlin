@@ -1,4 +1,5 @@
 @file:Suppress("UNUSED_PARAMETER")
+
 package lesson3.task1
 
 /**
@@ -34,7 +35,7 @@ fun isPrime(n: Int): Boolean {
  */
 fun isPerfect(n: Int): Boolean {
     var sum = 1
-    for (m in 2..n/2) {
+    for (m in 2..n / 2) {
         if (n % m > 0) continue
         sum += m
         if (sum > n) break
@@ -60,7 +61,15 @@ fun digitCountInNumber(n: Int, m: Int): Int =
  * Найти количество цифр в заданном числе n.
  * Например, число 1 содержит 1 цифру, 456 -- 3 цифры, 65536 -- 5 цифр.
  */
-fun digitNumber(n: Int): Int = TODO()
+fun digitNumber(n: Int): Int {
+    var counter = 0
+    var numb = Math.abs(n)
+    do {
+        numb /= 10
+        counter++
+    } while (numb != 0)
+    return counter
+}
 
 /**
  * Простая
@@ -68,7 +77,12 @@ fun digitNumber(n: Int): Int = TODO()
  * Найти число Фибоначчи из ряда 1, 1, 2, 3, 5, 8, 13, 21, ... с номером n.
  * Ряд Фибоначчи определён следующим образом: fib(1) = 1, fib(2) = 1, fib(n+2) = fib(n) + fib(n+1)
  */
-fun fib(n: Int): Int = TODO()
+fun fib(n: Int): Int {
+    if (n <= 2)
+        return 1
+    else
+        return fib(n - 1) + fib(n - 2)
+}
 
 /**
  * Простая
@@ -76,21 +90,45 @@ fun fib(n: Int): Int = TODO()
  * Для заданных чисел m и n найти наименьшее общее кратное, то есть,
  * минимальное число k, которое делится и на m и на n без остатка
  */
-fun lcm(m: Int, n: Int): Int = TODO()
+fun lcm(m: Int, n: Int): Int {
+    var numb1 = m
+    var numb2 = n
+    while (numb1 != numb2)
+        if (numb1 > numb2)
+            numb1 -= numb2
+        else
+            numb2 -= numb1
+    return n * m / numb1
+}
 
 /**
  * Простая
  *
  * Для заданного числа n > 1 найти минимальный делитель, превышающий 1
  */
-fun minDivisor(n: Int): Int = TODO()
+fun minDivisor(n: Int): Int {
+    var numb = 1
+    for (divisor in 2..Math.ceil(Math.sqrt(n.toDouble())).toInt())
+        if (n % divisor == 0) {
+            numb = divisor; break
+        }
+    if (numb == 1) numb = n
+    return numb
+}
 
 /**
  * Простая
  *
  * Для заданного числа n > 1 найти максимальный делитель, меньший n
  */
-fun maxDivisor(n: Int): Int = TODO()
+fun maxDivisor(n: Int): Int {
+    var numb = 1
+    for (divisor in n - 1 downTo 1)
+        if (n % divisor == 0) {
+            numb = divisor; break
+        }
+    return numb
+}
 
 /**
  * Простая
@@ -99,7 +137,15 @@ fun maxDivisor(n: Int): Int = TODO()
  * Взаимно простые числа не имеют общих делителей, кроме 1.
  * Например, 25 и 49 взаимно простые, а 6 и 8 -- нет.
  */
-fun isCoPrime(m: Int, n: Int): Boolean = TODO()
+fun isCoPrime(m: Int, n: Int): Boolean {
+    var coprime = 0
+    if (m > n) coprime = n else coprime = m
+    for (i in 2..coprime)
+        if ((n % i == 0) && (m % i == 0)) {
+            coprime = 1; break
+        }
+    return coprime != 1
+}
 
 /**
  * Простая
@@ -108,7 +154,11 @@ fun isCoPrime(m: Int, n: Int): Boolean = TODO()
  * то есть, существует ли такое целое k, что m <= k*k <= n.
  * Например, для интервала 21..28 21 <= 5*5 <= 28, а для интервала 51..61 квадрата не существует.
  */
-fun squareBetweenExists(m: Int, n: Int): Boolean = TODO()
+fun squareBetweenExists(m: Int, n: Int): Boolean {
+    var numb: Int = Math.sqrt(m.toDouble()).toInt()
+    if (numb * numb < m) numb++
+    return if (numb <= Math.sqrt(n.toDouble())) true else false
+}
 
 /**
  * Средняя
@@ -117,7 +167,17 @@ fun squareBetweenExists(m: Int, n: Int): Boolean = TODO()
  * sin(x) = x - x^3 / 3! + x^5 / 5! - x^7 / 7! + ...
  * Нужную точность считать достигнутой, если очередной член ряда меньше eps по модулю
  */
-fun sin(x: Double, eps: Double): Double = TODO()
+fun sin(x: Double, eps: Double): Double {
+    var equation = x
+    var counter = 1
+    var sin = x % (2 * Math.PI)
+    while (Math.abs(equation) >= eps) {
+        equation = -equation * (x % (2 * Math.PI)) / ((counter * 2 + 1) * (counter * 2)).toDouble() * (x % (2 * Math.PI))
+        counter += 1
+        sin += equation
+    }
+    return sin
+}
 
 /**
  * Средняя
@@ -126,7 +186,17 @@ fun sin(x: Double, eps: Double): Double = TODO()
  * cos(x) = 1 - x^2 / 2! + x^4 / 4! - x^6 / 6! + ...
  * Нужную точность считать достигнутой, если очередной член ряда меньше eps по модулю
  */
-fun cos(x: Double, eps: Double): Double = TODO()
+fun cos(x: Double, eps: Double): Double {
+    var equation = 1.0
+    var counter = 1
+    var cos = 1.0
+    while (Math.abs(equation) >= eps) {
+        equation = -equation * (x % (2 * Math.PI)) / ((counter * 2 - 1) * (counter * 2)).toDouble() * (x % (2 * Math.PI))
+        counter += 1
+        cos += equation
+    }
+    return cos
+}
 
 /**
  * Средняя
@@ -134,7 +204,15 @@ fun cos(x: Double, eps: Double): Double = TODO()
  * Поменять порядок цифр заданного числа n на обратный: 13478 -> 87431.
  * Не использовать строки при решении задачи.
  */
-fun revert(n: Int): Int = TODO()
+fun revert(n: Int): Int {
+    var revers = 0
+    var numb = n
+    while (numb >= 1) {
+        revers = revers * 10 + (numb % 10)
+        numb /= 10
+    }
+    return revers
+}
 
 /**
  * Средняя
@@ -143,7 +221,7 @@ fun revert(n: Int): Int = TODO()
  * первая цифра равна последней, вторая -- предпоследней и так далее.
  * 15751 -- палиндром, 3653 -- нет.
  */
-fun isPalindrome(n: Int): Boolean = TODO()
+fun isPalindrome(n: Int): Boolean = if (revert(n) == n) true else false
 
 /**
  * Средняя
@@ -151,7 +229,30 @@ fun isPalindrome(n: Int): Boolean = TODO()
  * Для заданного числа n определить, содержит ли оно различающиеся цифры.
  * Например, 54 и 323 состоят из разных цифр, а 111 и 0 из одинаковых.
  */
-fun hasDifferentDigits(n: Int): Boolean = TODO()
+fun hasDifferentDigits(n: Int): Boolean {
+    var number = n
+    var length = 1
+    var ch = 0
+    var kol = 0
+    while (number >= 10) {
+        number /= 10; kol += 1; length *= 10
+    }
+    number = kol
+    var k = length
+
+    for (i in 1..kol) {
+        k = length
+        for (j in 1..number) {
+            k = length / 10
+            ch = n / k % 10
+
+            if (ch != (n / length % 10)) return true
+        }
+        length /= 10
+        number -= 1
+    }
+    return false
+}
 
 /**
  * Сложная
@@ -160,7 +261,22 @@ fun hasDifferentDigits(n: Int): Boolean = TODO()
  * 149162536496481100121144...
  * Например, 2-я цифра равна 4, 7-я 5, 12-я 6.
  */
-fun squareSequenceDigit(n: Int): Int = TODO()
+fun squareSequenceDigit(n: Int): Int {
+    var numbers = 1
+    var sqrnumb: Int
+    var str: String = ""
+    var nn = n
+    while (nn > 0) {
+        sqrnumb = numbers * numbers
+        str = "$sqrnumb"
+        numbers++
+        nn -= str.length
+    }
+    numbers = str.toInt() % Math.pow(10.0, (Math.abs(nn) + 1) / 1.0).toInt()
+    while (numbers > 9)
+        numbers /= 10
+    return numbers
+}
 
 /**
  * Сложная
@@ -169,4 +285,19 @@ fun squareSequenceDigit(n: Int): Int = TODO()
  * 1123581321345589144...
  * Например, 2-я цифра равна 1, 9-я 2, 14-я 5.
  */
-fun fibSequenceDigit(n: Int): Int = TODO()
+fun fibSequenceDigit(n: Int): Int {
+    var numbers = 1
+    var str: String = ""
+    var nn = n
+    var fibnumb: Int
+    while (nn > 0) {
+        fibnumb = fib(numbers)
+        str = "$fibnumb"
+        numbers++
+        nn -= str.length
+    }
+    numbers = str.toInt() % Math.pow(10.0, (Math.abs(nn) + 1) / 1.0).toInt()
+    while (numbers > 9)
+        numbers /= 10
+    return numbers
+}
