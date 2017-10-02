@@ -31,9 +31,9 @@ fun isNumberHappy(number: Int): Boolean {
  * Определить, угрожают ли они друг другу. Вернуть true, если угрожают.
  * Считать, что ферзи не могут загораживать друг друга.
  */
-fun queenThreatens(x1: Int, y1: Int, x2: Int, y2: Int): Boolean {
-    return if (x1 == x2 || y1 == y2 || x1 - y1 == x2 - y2 || x1 + y1 == x2 + y2) true else false
-}
+fun queenThreatens(x1: Int, y1: Int, x2: Int, y2: Int): Boolean =
+        if (x1 == x2 || y1 == y2 || x1 - y1 == x2 - y2 || x1 + y1 == x2 + y2) true else false
+
 
 /**
  * Средняя
@@ -43,9 +43,9 @@ fun queenThreatens(x1: Int, y1: Int, x2: Int, y2: Int): Boolean {
  * Вернуть true, если утверждение верно
  */
 fun circleInside(x1: Double, y1: Double, r1: Double,
-                 x2: Double, y2: Double, r2: Double): Boolean {
-    return if (Math.sqrt(((x2 - x1) * (x2 - x1)) + ((y2 - y1) * (y2 - y1))) + r1 <= r2) true else false
-}
+                 x2: Double, y2: Double, r2: Double): Boolean =
+        if (Math.sqrt(((x2 - x1) * (x2 - x1)) + ((y2 - y1) * (y2 - y1))) + r1 <= r2) true else false
+
 
 /**
  * Средняя
@@ -57,6 +57,8 @@ fun circleInside(x1: Double, y1: Double, r1: Double,
  * Вернуть true, если кирпич пройдёт
  */
 fun brickPasses(a: Int, b: Int, c: Int, r: Int, s: Int): Boolean {
-    val hole = r * s
-    return if (a * b <= hole || a * c <= hole || b * c <= hole) true else false
+    if ((a <= r) && ((b <= s) || (c <= s))) return true else
+        if ((b <= r) && ((a <= s) || (c <= s))) return true else
+            if ((c <= r) && ((b <= s) || (a <= s))) return true else
+                return false
 }
