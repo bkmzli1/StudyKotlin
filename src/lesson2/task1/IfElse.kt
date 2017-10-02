@@ -35,15 +35,11 @@ fun minBiRoot(a: Double, b: Double, c: Double): Double {
  * вернуть строку вида: «21 год», «32 года», «12 лет».
  */
 fun ageDescription(age: Int): String {
-    when {
-        age % 100 in 5..20 ->
-            return "$age лет"
-        age % 10 == 1 ->
-            return "$age год"
-        age % 10 in 2..4 ->
-            return "$age года"
-        else ->
-            return "$age лет"
+    return when {
+        age % 100 in 5..20 -> "$age лет"
+        age % 10 == 1 -> "$age год"
+        age % 10 in 2..4 -> "$age года"
+        else -> "$age лет"
     }
 }
 
@@ -57,13 +53,12 @@ fun ageDescription(age: Int): String {
 fun timeForHalfWay(t1: Double, v1: Double,
                    t2: Double, v2: Double,
                    t3: Double, v3: Double): Double {
-    val half_way = ((v1 * t1) + (v2 * t2) + (v3 * t3)) / 2
-    if (v1 * t1 >= half_way)
-        return half_way / v1
-    else if (v1 * t1 + v2 * t2 >= half_way)
-        return t1 + (half_way - v1 * t1) / v2
-    else
-        return t1 + t2 + (half_way - v1 * t1 - v2 * t2) / v3
+    val halfWay = (v1 * t1 + v2 * t2 + v3 * t3) / 2
+    return when {
+        (v1 * t1 >= halfWay) -> halfWay / v1
+        (v1 * t1 + v2 * t2 >= halfWay) -> t1 + (halfWay - v1 * t1) / v2
+        else -> t1 + t2 + (halfWay - v1 * t1 - v2 * t2) / v3
+    }
 }
 
 /**
@@ -78,19 +73,18 @@ fun timeForHalfWay(t1: Double, v1: Double,
 fun whichRookThreatens(kingX: Int, kingY: Int,
                        rookX1: Int, rookY1: Int,
                        rookX2: Int, rookY2: Int): Int {
-    var wins = 0
+    var win1 = 0
+    var win2 = 0
     if (kingY == rookY1 || kingX == rookX1)
-        wins++
+        win1++
     if (kingY == rookY2 || kingX == rookX2)
-        wins++
-    if (wins == 0)
-        return 0
-    else if (wins == 2)
-        return 3
-    else if (wins == 1 && (kingY == rookY2 || kingX == rookX2))
-        return 2
-    else
-        return 1
+        win2++
+    return when {
+        (win1 == 0 && win2 == 0) -> 0
+        (win1+win2 == 2) -> 3
+        (win2 == 1) -> 2
+        else -> 1
+    }
 }
 
 /**
@@ -106,19 +100,18 @@ fun whichRookThreatens(kingX: Int, kingY: Int,
 fun rookOrBishopThreatens(kingX: Int, kingY: Int,
                           rookX: Int, rookY: Int,
                           bishopX: Int, bishopY: Int): Int {
-    var wins = 0
+    var win1 = 0
+    var win2 = 0
     if (kingX == rookX || kingY == rookY)
-        wins++
+        win1++
     if ((bishopX - bishopY == kingX - kingY) || (bishopX + bishopY == kingX + kingY))
-        wins++
-    if (wins == 0)
-        return 0
-    else if (wins == 2)
-        return 3
-    else if (wins == 1 && kingX == rookX || kingY == rookY)
-        return 1
-    else
-        return 2
+        win2++
+    return when {
+        (win1 == 0 && win2 == 0) -> 0
+        (win1+win2 == 2) -> 3
+        (win2 == 1) -> 2
+        else -> 1
+    }
 }
 
 /**
@@ -165,14 +158,11 @@ fun triangleKind(a: Double, b: Double, c: Double): Int {
  * Если пересечения нет, вернуть -1.
  */
 fun segmentLength(a: Int, b: Int, c: Int, d: Int): Int {
-    if (a > d || b < c)
-        return -1
-    else if (a <= d && d <= b && a <= c)
-        return d - c
-    else if (c <= b && b <= d && a < c)
-        return b - c
-    else if (c <= a && b <= d)
-        return b - a
-    else
-        return d - a
+    return when {
+        (a > d || b < c) -> -1
+        (a <= d && d <= b && a <= c) -> d - c
+        (c <= b && b <= d && a < c) -> b - c
+        (c <= a && b <= d) -> b - a
+        else -> d - a
+    }
 }
