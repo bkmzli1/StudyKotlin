@@ -267,10 +267,8 @@ fun squareSequenceDigit(n: Int): Int {
         numbers++
         nn -= str.length
     }
-    numbers = str.toInt() % Math.pow(10.0, (Math.abs(nn) + 1) / 1.0).toInt()
-    while (numbers > 9)
-        numbers /= 10
-    return numbers
+    numbers = str.length - 1 + nn
+    return str[numbers].toString().toInt()
 }
 
 /**
@@ -291,8 +289,6 @@ fun fibSequenceDigit(n: Int): Int {
         numbers++
         nn -= str.length
     }
-    numbers = str.toInt() % Math.pow(10.0, (Math.abs(nn) + 1) / 1.0).toInt()
-    while (numbers > 9)
-        numbers /= 10
-    return numbers
+    numbers = str.length - 1 + nn
+    return str[numbers].toString().toInt()
 }
