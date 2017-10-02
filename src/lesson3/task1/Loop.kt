@@ -135,10 +135,14 @@ fun maxDivisor(n: Int): Int {
 fun isCoPrime(m: Int, n: Int): Boolean {
     var coprime = 0
     if (m > n) coprime = n else coprime = m
-    for (i in 2..coprime)
-        if ((n % i == 0) && (m % i == 0)) {
-            coprime = 1; break
-        }
+    if (coprime != 1) {
+        for (i in 2..coprime)
+            if ((n % i == 0) && (m % i == 0)) {
+                coprime = 1; break
+            }
+    }
+    else
+        coprime = 0
     return coprime != 1
 }
 
