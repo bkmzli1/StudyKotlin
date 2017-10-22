@@ -166,10 +166,10 @@ fun squareBetweenExists(m: Int, n: Int): Boolean {
  * Нужную точность считать достигнутой, если очередной член ряда меньше eps по модулю
  */
 fun sin(x: Double, eps: Double): Double {
-    var equation = x
     var counter = 1
     var sin = x % (2 * Math.PI)
     val sinConst = sin
+    var equation = sin
     while (Math.abs(equation) >= eps) {
         equation = -equation * sinConst / ((counter * 2 + 1) * (counter * 2)).toDouble() * sinConst
         counter += 1
@@ -228,7 +228,7 @@ fun isPalindrome(n: Int): Boolean = revert(n) == n
  * Для заданного числа n определить, содержит ли оно различающиеся цифры.
  * Например, 54 и 323 состоят из разных цифр, а 111 и 0 из одинаковых.
  */
-fun hasDifferentDigits(n: Int): Boolean = if (digitCountInNumber(n, n % 10) == "$n".length) false else true
+fun hasDifferentDigits(n: Int): Boolean = !(digitCountInNumber(n, n % 10) == "$n".length)
 /**
  * Сложная
  *
