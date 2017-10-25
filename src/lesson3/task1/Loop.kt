@@ -129,10 +129,11 @@ fun maxDivisor(n: Int): Int {
  * Например, 25 и 49 взаимно простые, а 6 и 8 -- нет.
  */
 fun isCoPrime(m: Int, n: Int): Boolean =
-        !((maxDivisor(m) == maxDivisor(n) && lcm(m, n) != m * n) ||
-                minDivisor(m) == minDivisor(n) ||
-                minDivisor(m) == maxDivisor(n) ||
-                maxDivisor(m) == minDivisor(n))
+        !((m % maxDivisor(n) == 0 ||
+                m % minDivisor(n) == 0 ||
+                n % maxDivisor(m) == 0 ||
+                n % minDivisor(m) == 0) &&
+                lcm(m, n) != m * n)
 
 /**
  * Простая
