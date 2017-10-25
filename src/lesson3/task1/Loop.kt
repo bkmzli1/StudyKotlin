@@ -102,13 +102,11 @@ fun lcm(m: Int, n: Int): Int {
  * Для заданного числа n > 1 найти минимальный делитель, превышающий 1
  */
 fun minDivisor(n: Int): Int {
-    var numb = 1
-    for (divisor in 2..Math.ceil(Math.sqrt(n.toDouble())).toInt())
-        if (n % divisor == 0) {
-            numb = divisor; break
-        }
-    if (numb == 1) numb = n
-    return numb
+    for (divisor in 2..Math.ceil(Math.sqrt(n.toDouble())).toInt()) {
+        if (n % divisor == 0)
+            return divisor
+    }
+    return n
 }
 
 /**
@@ -117,12 +115,10 @@ fun minDivisor(n: Int): Int {
  * Для заданного числа n > 1 найти максимальный делитель, меньший n
  */
 fun maxDivisor(n: Int): Int {
-    var numb = 1
-    for (divisor in n - 1 downTo 1)
-        if (n % divisor == 0) {
-            numb = divisor; break
-        }
-    return numb
+    for (divisor in n - 1 downTo 1) {
+        return if (n % divisor == 0) divisor else continue
+    }
+    return 1
 }
 
 /**
@@ -133,16 +129,10 @@ fun maxDivisor(n: Int): Int {
  * Например, 25 и 49 взаимно простые, а 6 и 8 -- нет.
  */
 fun isCoPrime(m: Int, n: Int): Boolean {
-    var coprime:Int
-    if (m > n) coprime = n else coprime = m
-    if (coprime != 1) {
-        for (i in 2..coprime)
-            if ((n % i == 0) && (m % i == 0)) {
-                coprime = 1; break
-            }
-    } else
-        coprime = 0
-    return coprime != 1
+    return if ((maxDivisor(m) == maxDivisor(n) && lcm(m, n) != m * n) ||
+            minDivisor(m) == minDivisor(n) ||
+            minDivisor(m) == maxDivisor(n) ||
+            maxDivisor(m) == minDivisor(n)) false else true
 }
 
 /**
@@ -153,7 +143,7 @@ fun isCoPrime(m: Int, n: Int): Boolean {
  * Например, для интервала 21..28 21 <= 5*5 <= 28, а для интервала 51..61 квадрата не существует.
  */
 fun squareBetweenExists(m: Int, n: Int): Boolean {
-    var numb = Math.sqrt(m.toDouble()).toInt()
+    var numb = Math.ceil(Math.sqrt(m.toDouble()))
     if (numb * numb < m) numb++
     return if (numb <= Math.sqrt(n.toDouble())) true else false
 }
@@ -189,8 +179,9 @@ fun cos(x: Double, eps: Double): Double {
     var equation = 1.0
     var counter = 1
     var cos = 1.0
+    val const = x % (2 * Math.PI)
     while (Math.abs(equation) >= eps) {
-        equation = -equation * (x % (2 * Math.PI)) / ((counter * 2 - 1) * (counter * 2)).toDouble() * (x % (2 * Math.PI))
+        equation = -equation * const / ((counter * 2 - 1) * (counter * 2)).toDouble() * const
         counter += 1
         cos += equation
     }
@@ -228,7 +219,8 @@ fun isPalindrome(n: Int): Boolean = revert(n) == n
  * Для заданного числа n определить, содержит ли оно различающиеся цифры.
  * Например, 54 и 323 состоят из разных цифр, а 111 и 0 из одинаковых.
  */
-fun hasDifferentDigits(n: Int): Boolean = !(digitCountInNumber(n, n % 10) == "$n".length)
+fun hasDifferentDigits(n: Int): Boolean = digitCountInNumber(n, n % 10) != "$n".length
+
 /**
  * Сложная
  *
@@ -261,9 +253,8 @@ fun fibSequenceDigit(n: Int): Int {
     var numbers = 1
     var str = ""
     var nn = n
-    var fibnumb: Int
     while (nn > 0) {
-        fibnumb = fib(numbers)
+        val fibnumb = fib(numbers)
         str = "$fibnumb"
         numbers++
         nn -= str.length
