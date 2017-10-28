@@ -299,9 +299,9 @@ fun decimalFromString(str: String, base: Int): Int {
     val ch = "0123456789"
     val abc = "abcdefghijklmnopqrstuvwxyz"
     for (i in 0 until str.length)
-        if (str[i] in ch) list.add(ch.indexOf(str[i],0)) else
-            list.add(abc.indexOf(str[i],0)+10)
-    return decimal(list,base)
+        if (str[i] in ch) list.add(ch.indexOf(str[i], 0)) else
+            list.add(abc.indexOf(str[i], 0) + 10)
+    return decimal(list, base)
 }
 
 /**
@@ -314,8 +314,8 @@ fun decimalFromString(str: String, base: Int): Int {
  */
 fun roman(n: Int): String {
     var str = ""
-    val rimNumb = listOf<Int>(1000,900,500,400,100,90,50,40,10,9,5,4,1)
-    val rimAbc = listOf<String>("M","CM","D","CD","C","XC","L","XL","X","IX","V","IV","I")
+    val rimNumb = listOf<Int>(1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1)
+    val rimAbc = listOf<String>("M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I")
     var n1 = n
     var i = 0
     while (rimNumb[i] > n) i += 1
@@ -336,4 +336,53 @@ fun roman(n: Int): String {
  * Например, 375 = "триста семьдесят пять",
  * 23964 = "двадцать три тысячи девятьсот шестьдесят четыре"
  */
-fun russian(n: Int): String = TODO()
+fun russian(n: Int): String {
+    val numbs = listOf<Int>(1, 2, 3, 4, 5, 6, 7, 8, 9,
+            10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 30, 40, 50, 60, 70, 80, 90,
+            100, 200, 300, 400, 500, 600, 700, 800, 900)
+    val rusNumbs = listOf<String>("один", "два", "три", "четыре", "пять", "шесть", "семь", "восемь", "девять"
+            , "десять", "одиннадцать", "двенадцать", "тринадцать", "четырнадчать", "пятнадцать", "шестнадцать", "семнадцать", "восемнадцать", "девятнадцать"
+            , "двадцать", "тридцать", "сорок", "пятьдесят", "шестьдесят", "семьдесят", "восемьдясят", "девяносто"
+            , "сто", "двести", "триста", "четыреста", "пятьсот", "шестьсот", "семьсот", "восемьсот", "девятьсот")
+    var nCopy = n
+    if (n == 0) return "ноль"
+    var outputString = ""
+    var counter = numbs.size - 1
+    var except = "тысяч "
+    if (n / 1000 > 2) {
+        nCopy /= 1000
+        if (nCopy % 10 == 2){
+            except = "две тысячи "
+            nCopy -= 2
+        }
+        else if (nCopy % 10 == 1){
+            except = "одна тысяча "
+            nCopy -= 1
+        }
+
+        while (nCopy != 0) {
+            if (nCopy >= numbs[counter]) {
+                nCopy -= numbs[counter]
+                outputString += (rusNumbs[counter] + " ")
+            }
+            counter--
+        }
+        outputString += except
+
+    } else if (n / 1000 == 2)
+        outputString += "две тысячи "
+    else if (n / 1000 == 1)
+        outputString += "одна тысяча "
+
+    nCopy = n % 1000
+    counter = numbs.size - 1
+
+    while (nCopy != 0) {
+        if (nCopy >= numbs[counter]) {
+            nCopy -= numbs[counter]
+            outputString += (rusNumbs[counter] + " ")
+        }
+        counter--
+    }
+    return outputString.substring(0, outputString.length - 1)
+}
