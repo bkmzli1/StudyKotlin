@@ -351,7 +351,15 @@ fun russian(n: Int): String {
     var except = "тысяч "
     if (n / 1000 > 2) {
         nCopy /= 1000
-        if (nCopy % 10 == 2){
+        if (nCopy % 10 == 4){
+            except = "четыре тысячи "
+            nCopy -= 4
+        }
+        else if (nCopy % 10 == 3){
+            except = "три тысячи "
+            nCopy -= 3
+        }
+        else if (nCopy % 10 == 2){
             except = "две тысячи "
             nCopy -= 2
         }
