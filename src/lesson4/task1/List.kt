@@ -330,6 +330,24 @@ fun roman(n: Int): String {
 }
 
 /**
+ * Вспомогательная функция для fun russian()
+ */
+fun dlcRussian(n: Int, listNumbs: List<Int>, listRusNumbs: List<String>): String {
+    var nCopy = n
+    var outputString = ""
+    var counter = listNumbs.size - 1
+    while (nCopy != 0) {
+        if (nCopy >= listNumbs[counter]) {
+            nCopy -= listNumbs[counter]
+            outputString += listRusNumbs[counter]
+            outputString += " "
+        }
+        counter--
+    }
+    return outputString
+}
+
+/**
  * Очень сложная
  *
  * Записать заданное натуральное число 1..999999 прописью по-русски.
@@ -347,50 +365,28 @@ fun russian(n: Int): String {
     var nCopy = n
     if (n == 0) return "ноль"
     var outputString = ""
-    var counter = numbs.size - 1
     var except = "тысяч "
     if (n / 1000 > 2) {
         nCopy /= 1000
-        if (nCopy % 10 == 4){
-            except = "четыре тысячи "
-            nCopy -= 4
-        }
-        else if (nCopy % 10 == 3){
-            except = "три тысячи "
-            nCopy -= 3
-        }
-        else if (nCopy % 10 == 2){
+        if (nCopy % 10 == 4 || nCopy % 10 == 3) {
+            except = rusNumbs[numbs.indexOf(nCopy % 10)] + " тысячи "
+            nCopy -= nCopy % 10
+        } else if (nCopy % 10 == 2) {
             except = "две тысячи "
-            nCopy -= 2
-        }
-        else if (nCopy % 10 == 1){
+            nCopy -= nCopy % 10
+        } else if (nCopy % 10 == 1) {
             except = "одна тысяча "
             nCopy -= 1
         }
-
-        while (nCopy != 0) {
-            if (nCopy >= numbs[counter]) {
-                nCopy -= numbs[counter]
-                outputString += (rusNumbs[counter] + " ")
-            }
-            counter--
-        }
+        outputString += dlcRussian(nCopy, numbs, rusNumbs)
         outputString += except
-
     } else if (n / 1000 == 2)
         outputString += "две тысячи "
     else if (n / 1000 == 1)
         outputString += "одна тысяча "
 
     nCopy = n % 1000
-    counter = numbs.size - 1
+    outputString += dlcRussian(nCopy, numbs, rusNumbs)
 
-    while (nCopy != 0) {
-        if (nCopy >= numbs[counter]) {
-            nCopy -= numbs[counter]
-            outputString += (rusNumbs[counter] + " ")
-        }
-        counter--
-    }
     return outputString.substring(0, outputString.length - 1)
 }
