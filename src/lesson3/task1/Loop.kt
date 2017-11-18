@@ -115,7 +115,7 @@ fun minDivisor(n: Int): Int {
  * Для заданного числа n > 1 найти максимальный делитель, меньший n
  */
 fun maxDivisor(n: Int): Int {
-    for (divisor in n - 1 downTo 1) {
+    for (divisor in n - 1 downTo 2) {
         return if (n % divisor == 0) divisor else continue
     }
     return 1
@@ -128,12 +128,7 @@ fun maxDivisor(n: Int): Int {
  * Взаимно простые числа не имеют общих делителей, кроме 1.
  * Например, 25 и 49 взаимно простые, а 6 и 8 -- нет.
  */
-fun isCoPrime(m: Int, n: Int): Boolean =
-        !((m % maxDivisor(n) == 0 ||
-                m % minDivisor(n) == 0 ||
-                n % maxDivisor(m) == 0 ||
-                n % minDivisor(m) == 0) &&
-                lcm(m, n) != m * n)
+fun isCoPrime(m: Int, n: Int): Boolean = lcm(m, n) == m * n
 
 /**
  * Простая
@@ -142,11 +137,7 @@ fun isCoPrime(m: Int, n: Int): Boolean =
  * то есть, существует ли такое целое k, что m <= k*k <= n.
  * Например, для интервала 21..28 21 <= 5*5 <= 28, а для интервала 51..61 квадрата не существует.
  */
-fun squareBetweenExists(m: Int, n: Int): Boolean {
-    var numb = Math.ceil(Math.sqrt(m.toDouble()))
-    if (numb * numb < m) numb++
-    return if (numb <= Math.sqrt(n.toDouble())) true else false
-}
+fun squareBetweenExists(m: Int, n: Int): Boolean = Math.ceil(Math.sqrt(m.toDouble())) <= Math.sqrt(n.toDouble())
 
 /**
  * Средняя
@@ -167,6 +158,7 @@ fun sin(x: Double, eps: Double): Double {
     }
     return sin
 }
+
 /**
  * Средняя
  *
@@ -178,9 +170,9 @@ fun cos(x: Double, eps: Double): Double {
     var equation = 1.0
     var counter = 1
     var cos = 1.0
-    val const = x % (2 * Math.PI)
+    val constX = x % (2 * Math.PI)
     while (Math.abs(equation) >= eps) {
-        equation = -equation * const / ((counter * 2 - 1) * (counter * 2)).toDouble() * const
+        equation = -equation * constX / ((counter * 2 - 1) * (counter * 2)).toDouble() * constX
         counter += 1
         cos += equation
     }

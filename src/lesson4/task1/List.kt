@@ -136,9 +136,9 @@ fun center(list: MutableList<Double>): MutableList<Double> =
         when {
             list.isEmpty() -> list
             else -> {
-                val const = list.sum() / list.size
+                val average = mean(list)
                 for (elCount in 0 until list.size) {
-                    list[elCount] -= const
+                    list[elCount] -= average
                 }
                 list
             }
@@ -156,10 +156,10 @@ fun times(a: List<Double>, b: List<Double>): Double =
         when {
             a.isEmpty() || b.isEmpty() -> 0.0
             else -> {
-                var C = 0.0
+                var result = 0.0
                 for (elCount in 0 until a.size)
-                    C += a[elCount] * b[elCount]
-                C //return
+                    result += a[elCount] * b[elCount]
+                result //return
             }
         }
 
@@ -196,11 +196,8 @@ fun accumulate(list: MutableList<Double>): MutableList<Double> =
         when {
             list.isEmpty() -> list
             else -> {
-                var fstEl = list[0]
-                for (elCounter in 1 until list.size) {
-                    val timeEl = list[elCounter]
-                    list[elCounter] += fstEl
-                    fstEl += timeEl
+                for (i in 1..list.size - 1) {
+                    list[i] += list[i - 1]
                 }
                 list
             }
@@ -219,11 +216,12 @@ fun factorize(n: Int): List<Int> {
     val list = mutableListOf<Int>()
     while (nCopy > 1) {
         if (nCopy % divisor == 0) {
-            nCopy /= divisor; list.add(divisor)
+            nCopy /= divisor
+            list.add(divisor)
         } else
             divisor++
     }
-    return list.toList()
+    return list
 }
 
 /**
@@ -242,14 +240,14 @@ fun factorizeToString(n: Int): String = factorize(n).joinToString(separator = "*
  * например: n = 100, base = 4 -> (1, 2, 1, 0) или n = 250, base = 14 -> (1, 3, 12)
  */
 fun convert(n: Int, base: Int): List<Int> {
-    if (n == 0) return listOf(0)
+
     var nCopy = n
     val newN = mutableListOf<Int>()
     while (nCopy > 0) {
         newN.add(nCopy % base)
         nCopy /= base
     }
-    return newN.reversed()
+    return if (n == 0) return listOf(0) else newN.reversed()
 }
 
 /**
@@ -295,13 +293,12 @@ fun decimal(digits: List<Int>, base: Int): Int {
  * Например: str = "13c", base = 14 -> 250
  */
 fun decimalFromString(str: String, base: Int): Int {
-    val list = mutableListOf<Int>()
-    val ch = "0123456789"
-    val abc = "abcdefghijklmnopqrstuvwxyz"
-    for (i in 0 until str.length)
-        if (str[i] in ch) list.add(ch.indexOf(str[i], 0)) else
-            list.add(abc.indexOf(str[i], 0) + 10)
-    return decimal(list, base)
+    val middle = mutableListOf<Int>()
+    for (i in 0..str.length - 1) {
+        if (str[i] in '0'..'9')
+            middle.add(str[i] - '0') else middle.add(str[i] - 'a' + 10)
+    }
+    return if (str.length == 1) middle[0] else decimal(middle, base)
 }
 
 /**
@@ -314,15 +311,14 @@ fun decimalFromString(str: String, base: Int): Int {
  */
 fun roman(n: Int): String {
     var str = ""
-    val rimNumb = listOf<Int>(1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1)
-    val rimAbc = listOf<String>("M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I")
+    val romNumb = listOf<Int>(1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1)
+    val romAbc = listOf<String>("M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I")
     var n1 = n
     var i = 0
-    while (rimNumb[i] > n) i += 1
     while (n1 > 0) {
-        while (n1 - rimNumb[i] >= 0) {
-            str += rimAbc[i]
-            n1 -= rimNumb[i]
+        while (n1 - romNumb[i] >= 0) {
+            str += romAbc[i]
+            n1 -= romNumb[i]
         }
         i += 1
     }
@@ -332,7 +328,7 @@ fun roman(n: Int): String {
 /**
  * Вспомогательная функция для fun russian()
  */
-fun dlcRussian(n: Int, listNumbs: List<Int>, listRusNumbs: List<String>): String {
+fun subRussian(n: Int, listNumbs: List<Int>, listRusNumbs: List<String>): String {
     var nCopy = n
     var outputString = ""
     var counter = listNumbs.size - 1
@@ -368,17 +364,14 @@ fun russian(n: Int): String {
     var except = "тысяч "
     if (n / 1000 > 2) {
         nCopy /= 1000
-        if (nCopy % 10 == 4 || nCopy % 10 == 3) {
+        if (nCopy % 10 == 4 || nCopy % 10 == 3)
             except = rusNumbs[numbs.indexOf(nCopy % 10)] + " тысячи "
-            nCopy -= nCopy % 10
-        } else if (nCopy % 10 == 2) {
+        else if (nCopy % 10 == 2)
             except = "две тысячи "
-            nCopy -= nCopy % 10
-        } else if (nCopy % 10 == 1) {
+        else if (nCopy % 10 == 1)
             except = "одна тысяча "
-            nCopy -= 1
-        }
-        outputString += dlcRussian(nCopy, numbs, rusNumbs)
+        if (nCopy % 10 < 5) nCopy -= nCopy % 10
+        outputString += subRussian(nCopy, numbs, rusNumbs)
         outputString += except
     } else if (n / 1000 == 2)
         outputString += "две тысячи "
@@ -386,7 +379,7 @@ fun russian(n: Int): String {
         outputString += "одна тысяча "
 
     nCopy = n % 1000
-    outputString += dlcRussian(nCopy, numbs, rusNumbs)
+    outputString += subRussian(nCopy, numbs, rusNumbs)
 
-    return outputString.substring(0, outputString.length - 1)
+    return outputString.trim(' ')
 }
