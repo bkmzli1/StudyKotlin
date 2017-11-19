@@ -145,7 +145,7 @@ fun bestLongJump(jumps: String): Int {
     val number = "0123456789"
     if (number in jumps) return -1
     var result = ""
-    var maxResult = 0
+    var maxResult = -1
     for (el in jumps) {
         if (el in number) result += el
         else if (el == ' ' || el == '-' || el == '%') {
@@ -155,9 +155,8 @@ fun bestLongJump(jumps: String): Int {
     }
     if (result.isNotEmpty() && result.toInt() > maxResult) {
         maxResult = result.toInt()
-        print(result)
     }
-    return if (maxResult == 0) -1 else maxResult
+    return maxResult
 }
 
 /**
@@ -239,10 +238,10 @@ fun firstDuplicateIndex(str: String): Int {
  */
 fun mostExpensive(description: String): String {
     if (description.isEmpty()) return ""
-    val parts = description.split("; ")
     var maxCost = 0.0
     var nameMaxCost = ""
     try {
+        val parts = description.split("; ")
         for (el in parts) {
             val product = el.split(" ")
             if (product[1].toDouble() > maxCost) {
