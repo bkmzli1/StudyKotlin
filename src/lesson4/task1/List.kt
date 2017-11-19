@@ -325,23 +325,11 @@ fun roman(n: Int): String {
     return str
 }
 
-/**
- * Вспомогательная функция для fun russian()
- */
-fun subRussian(n: Int, listNumbs: List<Int>, listRusNumbs: List<String>): String {
-    var nCopy = n
-    var outputString = ""
-    var counter = listNumbs.size - 1
-    while (nCopy != 0) {
-        if (nCopy >= listNumbs[counter]) {
-            nCopy -= listNumbs[counter]
-            outputString += listRusNumbs[counter]
-            outputString += " "
-        }
-        counter--
-    }
-    return outputString
-}
+val hd = listOf("сто", "двести", "триста", "четыреста", "пятьсот", "шестьсот", "семьсот", "восемьсот", "девятьсот")
+val tn = listOf("двадцать", "тридцать", "сорок", "пятьдесят", "шестьдесят", "семьдесят", "восемьдесят", "девяносто")
+val tn1 = listOf("десять", "одиннадцать", "двенадцать", "тринадцать", "четырнадцать", "пятнадцать", "шестнадцать", "семнадцать", "восемнадцать", "девятнадцать")
+val un = listOf("одна", "две", "три", "четыре", "пять", "шесть", "семь", "восемь", "девять")
+val un1 = listOf("один", "два", "три", "четыре", "пять", "шесть", "семь", "восемь", "девять")
 
 /**
  * Очень сложная
@@ -350,36 +338,38 @@ fun subRussian(n: Int, listNumbs: List<Int>, listRusNumbs: List<String>): String
  * Например, 375 = "триста семьдесят пять",
  * 23964 = "двадцать три тысячи девятьсот шестьдесят четыре"
  */
+
+fun russianMiddle(middle: Int, hundred: List<String>, ten: List<String>, ten1: List<String>, units: List<String>): List<String> {
+    val result = mutableListOf<String>()
+    if (middle / 100 >= 1) {
+        val hd = middle / 100
+        result.add(hundred[hd - 1])
+    }
+    if (middle % 100 / 10 == 1) {
+        val tn1 = middle % 10
+        result.add(ten1[tn1])
+    } else if (middle % 100 / 10 == 0) {
+        val un = middle % 10
+        if (un >= 1) result.add(units[un - 1])
+    } else {
+        val tn = middle % 100 / 10
+        result.add(ten[tn - 2])
+        val un = middle % 10
+        if (un >= 1) result.add(units[un - 1])
+    }
+    return result
+}
+
 fun russian(n: Int): String {
-    val numbs = listOf<Int>(1, 2, 3, 4, 5, 6, 7, 8, 9,
-            10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 30, 40, 50, 60, 70, 80, 90,
-            100, 200, 300, 400, 500, 600, 700, 800, 900)
-    val rusNumbs = listOf<String>("один", "два", "три", "четыре", "пять", "шесть", "семь", "восемь", "девять"
-            , "десять", "одиннадцать", "двенадцать", "тринадцать", "четырнадцать", "пятнадцать", "шестнадцать", "семнадцать", "восемнадцать", "девятнадцать"
-            , "двадцать", "тридцать", "сорок", "пятьдесят", "шестьдесят", "семьдесят", "восемьдесят", "девяносто"
-            , "сто", "двести", "триста", "четыреста", "пятьсот", "шестьсот", "семьсот", "восемьсот", "девятьсот")
-    var nCopy = n
-    if (n == 0) return "ноль"
-    var outputString = ""
-    var except = "тысяч "
-    if (n / 1000 > 2) {
-        nCopy /= 1000
-        if (nCopy % 10 == 4 || nCopy % 10 == 3)
-            except = rusNumbs[numbs.indexOf(nCopy % 10)] + " тысячи "
-        else if (nCopy % 10 == 2)
-            except = "две тысячи "
-        else if (nCopy % 10 == 1)
-            except = "одна тысяча "
-        if (nCopy % 10 < 5) nCopy -= nCopy % 10
-        outputString += subRussian(nCopy, numbs, rusNumbs)
-        outputString += except
-    } else if (n / 1000 == 2)
-        outputString += "две тысячи "
-    else if (n / 1000 == 1)
-        outputString += "одна тысяча "
-
-    nCopy = n % 1000
-    outputString += subRussian(nCopy, numbs, rusNumbs)
-
-    return outputString.trim(' ')
+    val result = mutableListOf<String>()
+    val part1 = n / 1000
+    if (part1 > 0) {
+        result.addAll(russianMiddle(part1, hd, tn, tn1, un))
+        if ((part1 % 10 == 1) && (part1 / 10 % 10 != 1)) result.add("тысяча")
+        else if (!(part1 % 100 / 10 == 1) && (part1 % 10 == 2 || part1 % 10 == 3 || part1 % 10 == 4)) result.add("тысячи")
+        else result.add("тысяч")
+    }
+    val part2 = n % 1000
+    result.addAll(russianMiddle(part2, hd, tn, tn1, un1))
+    return result.joinToString(separator = " ")
 }

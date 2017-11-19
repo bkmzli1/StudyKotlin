@@ -90,15 +90,20 @@ fun dateStrToDigit(str: String): String {
  */
 fun dateDigitToStr(digital: String): String {
     val months = listOf("января", "февраля", "марта", "апреля", "мая", "июня", "июля", "августа", "сентября", "октября", "ноября", "декабря")
-    val date = digital.split(".")
-    if (date.size == 3) {
-        val day = date[0].toInt()
-        val month = date[1].toInt()
-        if (day in 1..31 && month in 1..12)
-            return ("$day ${months[month - 1]} ${date[2]}")
-        else
-            return ""
-    } else return ""
+    try {
+        val date = digital.split(".")
+        if (date.size == 3) {
+            val day = date[0].toInt()
+            val month = date[1].toInt()
+            if (day in 1..31 && month in 1..12)
+                return ("$day ${months[month - 1]} ${date[2]}")
+            else
+                return ""
+        } else return ""
+    }
+    catch (e:NumberFormatException){
+        return ""
+    }
 }
 
 /**
@@ -246,7 +251,7 @@ fun mostExpensive(description: String): String {
             }
         }
     } catch (e: NumberFormatException) {
-        return ""
+        return "Any good with price 0.0"
     }
     return nameMaxCost
 }
