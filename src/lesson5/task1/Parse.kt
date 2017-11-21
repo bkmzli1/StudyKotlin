@@ -100,8 +100,7 @@ fun dateDigitToStr(digital: String): String {
             else
                 return ""
         } else return ""
-    }
-    catch (e:NumberFormatException){
+    } catch (e: NumberFormatException) {
         return ""
     }
 }
@@ -246,14 +245,15 @@ fun mostExpensive(description: String): String {
         for (el in parts) {
             val product = el.split(" ")
             val maxOfParts = product[1].toDouble()
-            if ( maxOfParts > maxCost) {
+            if (maxOfParts > maxCost) {
                 maxCost = maxOfParts
                 nameMaxCost = product[0]
             }
         }
     } catch (e: NumberFormatException) {
-        return "Any good with price 0.0"
+        return ""
     }
+    if (nameMaxCost == "") return "Any good with price 0.0"
     return nameMaxCost
 }
 

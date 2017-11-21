@@ -294,7 +294,7 @@ fun decimal(digits: List<Int>, base: Int): Int {
  */
 fun decimalFromString(str: String, base: Int): Int {
     val middle = mutableListOf<Int>()
-    for (i in 0 until str.length - 1) {
+    for (i in 0..str.length - 1) {
         if (str[i] in '0'..'9')
             middle.add(str[i] - '0')
         else
