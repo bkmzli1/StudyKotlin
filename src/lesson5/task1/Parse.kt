@@ -253,7 +253,7 @@ fun mostExpensive(description: String): String {
     } catch (e: NumberFormatException) {
         return ""
     }
-    if (nameMaxCost == "") return "Any good with price 0.0"
+    if (maxCost == 0.0) return "Any good with price 0.0"
     return nameMaxCost
 }
 
