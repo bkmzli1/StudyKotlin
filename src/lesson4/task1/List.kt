@@ -294,9 +294,11 @@ fun decimal(digits: List<Int>, base: Int): Int {
  */
 fun decimalFromString(str: String, base: Int): Int {
     val middle = mutableListOf<Int>()
-    for (i in 0..str.length - 1) {
+    for (i in 0 until str.length - 1) {
         if (str[i] in '0'..'9')
-            middle.add(str[i] - '0') else middle.add(str[i] - 'a' + 10)
+            middle.add(str[i] - '0')
+        else
+            middle.add(str[i] - 'a' + 10)
     }
     return if (str.length == 1) middle[0] else decimal(middle, base)
 }
@@ -325,11 +327,11 @@ fun roman(n: Int): String {
     return str
 }
 
-val hd = listOf("сто", "двести", "триста", "четыреста", "пятьсот", "шестьсот", "семьсот", "восемьсот", "девятьсот")
-val tn = listOf("двадцать", "тридцать", "сорок", "пятьдесят", "шестьдесят", "семьдесят", "восемьдесят", "девяносто")
-val tn1 = listOf("десять", "одиннадцать", "двенадцать", "тринадцать", "четырнадцать", "пятнадцать", "шестнадцать", "семнадцать", "восемнадцать", "девятнадцать")
-val un = listOf("одна", "две", "три", "четыре", "пять", "шесть", "семь", "восемь", "девять")
-val un1 = listOf("один", "два", "три", "четыре", "пять", "шесть", "семь", "восемь", "девять")
+val hundreds = listOf("сто", "двести", "триста", "четыреста", "пятьсот", "шестьсот", "семьсот", "восемьсот", "девятьсот")
+val tens = listOf("двадцать", "тридцать", "сорок", "пятьдесят", "шестьдесят", "семьдесят", "восемьдесят", "девяносто")
+val tens2 = listOf("десять", "одиннадцать", "двенадцать", "тринадцать", "четырнадцать", "пятнадцать", "шестнадцать", "семнадцать", "восемнадцать", "девятнадцать")
+val units = listOf("одна", "две", "три", "четыре", "пять", "шесть", "семь", "восемь", "девять")
+val units2 = listOf("один", "два", "три", "четыре", "пять", "шесть", "семь", "восемь", "девять")
 
 /**
  * Очень сложная
@@ -364,12 +366,12 @@ fun russian(n: Int): String {
     val result = mutableListOf<String>()
     val part1 = n / 1000
     if (part1 > 0) {
-        result.addAll(russianMiddle(part1, hd, tn, tn1, un))
+        result.addAll(russianMiddle(part1, hundreds, tens, tens2, units))
         if ((part1 % 10 == 1) && (part1 / 10 % 10 != 1)) result.add("тысяча")
         else if (!(part1 % 100 / 10 == 1) && (part1 % 10 == 2 || part1 % 10 == 3 || part1 % 10 == 4)) result.add("тысячи")
         else result.add("тысяч")
     }
     val part2 = n % 1000
-    result.addAll(russianMiddle(part2, hd, tn, tn1, un1))
+    result.addAll(russianMiddle(part2, hundreds, tens, tens2, units2))
     return result.joinToString(separator = " ")
 }
