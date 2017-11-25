@@ -327,45 +327,4 @@ fun fromRoman(roman: String): Int {
  * IllegalArgumentException должен бросаться даже если ошибочная команда не была достигнута в ходе выполнения.
  *
  */
-fun leftBkt(counter:Int,kol:Int,commands:String):Int {
-    var counterInFun = counter
-    var bktCounter=kol
-    while ((commands[counterInFun] != ']') or  (bktCounter != 0)) {
-        counterInFun += 1
-        if (commands[counterInFun] == '[') bktCounter += 1
-        if (commands[counterInFun] == ']') bktCounter -= 1
-    }
-    return counterInFun
-}
-fun rightBkt(counter:Int,kol:Int,commands:String):Int {
-    var counterInFun = counter
-    var bktCounter = kol
-    while ((commands[counterInFun] != '[') or  (bktCounter != 0)) {
-        counterInFun -= 1
-        if (commands[counterInFun] == '[') bktCounter -= 1
-        if (commands[counterInFun] == ']') bktCounter += 1
-    }
-    return counterInFun
-}
-fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
-    val list= mutableListOf<Int>()
-    for (i in 0 until cells) list.add(0)
-    var counter=-1
-    var lim=0
-    var point=Math.floor((cells/2).toDouble()).toInt()
-    while ((counter < commands.length-1) and (lim < limit)){
-        counter += 1
-        lim +=1
-        if ((point in 0 until cells)) {
-            when {
-                commands[counter] == '+' -> list[point] += 1
-                commands[counter] == '-' -> list[point] -= 1
-                commands[counter] == '>' -> point += 1
-                commands[counter] == '<' -> point -= 1
-                (commands[counter] == '[') and (list[point] == 0) -> counter = leftBkt(counter,1,commands)
-                (commands[counter] == ']') and (list[point] != 0) -> counter = rightBkt(counter,1,commands)
-            }
-        }
-    }
-    return list
-}
+fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> = TODO()
