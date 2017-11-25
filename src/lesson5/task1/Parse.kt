@@ -145,17 +145,15 @@ fun bestLongJump(jumps: String): Int {
     if (jumps.isEmpty()) return -1
     val number = "0123456789"
     if (number in jumps) return -1
-    val list = jumps.split(" ")
+    val list = jumps.trim().split(" ")
     var maxResult = -1
     for (el in list) {
-        if (el[0] in number){
-                if (el.toInt() > maxResult)
-                    maxResult = el.toInt()
-            }
-        else if (el == " " || el == "-" || el == "%") continue
+        if (el.isNotEmpty() && el[0] in number) {
+            if (el.toInt() > maxResult)
+                maxResult = el.toInt()
+        } else if (el == " " || el == "-" || el == "%" || el == "") continue
         else return -1
     }
-    print("s")
     return maxResult
 }
 
@@ -266,7 +264,32 @@ fun mostExpensive(description: String): String {
  *
  * Вернуть -1, если roman не является корректным римским числом
  */
-fun fromRoman(roman: String): Int = TODO()
+fun fromRoman(roman: String): Int {
+    if (roman.isEmpty()) return -1
+    val romNumb = listOf<Int>(1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1)
+    val romAbc = listOf<String>("M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I")
+    var number = 0
+    var elNumb = 0
+    while (elNumb < roman.length) {
+        val el = roman[elNumb].toString()
+        if (el in romAbc) {
+            if (elNumb < roman.length - 1 &&
+                    ((el == "I" && roman[elNumb + 1].toString() == "V") ||
+                            (el == "I" && roman[elNumb + 1].toString() == "X") ||
+                            (el == "X" && roman[elNumb + 1].toString() == "L") ||
+                            (el == "X" && roman[elNumb + 1].toString() == "C") ||
+                            (el == "C" && roman[elNumb + 1].toString() == "D") ||
+                            (el == "C" && roman[elNumb + 1].toString() == "M"))) {
+                number += romNumb[romAbc.indexOf(el + roman[elNumb + 1].toString())]
+                elNumb++
+            } else {
+                number += romNumb[romAbc.indexOf(el)]
+            }
+        } else return -1
+        elNumb++
+    }
+    return number
+}
 
 /**
  * Очень сложная
