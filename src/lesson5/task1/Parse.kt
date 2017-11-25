@@ -126,7 +126,9 @@ fun flattenPhoneNumber(phone: String): String {
         if (el in number || el == '+') result += el
         else if (el != '(' && el != ')' && el != ' ' && el != '-') return ""
     }
-    return result
+    if (result.isEmpty()) return ""
+    else if (result.first() == '+' && result.length == 1) return ""
+    else return result
 }
 
 /**
@@ -143,18 +145,17 @@ fun bestLongJump(jumps: String): Int {
     if (jumps.isEmpty()) return -1
     val number = "0123456789"
     if (number in jumps) return -1
-    var result = ""
+    val list = jumps.split(" ")
     var maxResult = -1
-    for (el in jumps) {
-        if (el in number) result += el
-        else if (el == ' ' || el == '-' || el == '%') {
-            if (result.isNotEmpty() && result.toInt() > maxResult) maxResult = result.toInt()
-            result = ""
-        } else return -1
+    for (el in list) {
+        if (el[0] in number){
+                if (el.toInt() > maxResult)
+                    maxResult = el.toInt()
+            }
+        else if (el == " " || el == "-" || el == "%") continue
+        else return -1
     }
-    if (result.isNotEmpty() && result.toInt() > maxResult) {
-        maxResult = result.toInt()
-    }
+    print("s")
     return maxResult
 }
 
@@ -173,9 +174,7 @@ fun bestHighJump(jumps: String): Int {
     var max = -1
     for (part in 1..parts.size - 1 step 2) {
         val maxOfParts = parts[part - 1].toInt()
-        for (j in parts[part]) {
-            if (j == '+' && max < maxOfParts) max = maxOfParts
-        }
+        if ('+' in parts[part] && max < maxOfParts) max = maxOfParts
     }
     return max
 }
@@ -245,7 +244,7 @@ fun mostExpensive(description: String): String {
         for (el in parts) {
             val product = el.split(" ")
             val maxOfParts = product[1].toDouble()
-            if (maxOfParts > maxCost) {
+            if (maxOfParts >= maxCost) {
                 maxCost = maxOfParts
                 nameMaxCost = product[0]
             }
@@ -253,7 +252,6 @@ fun mostExpensive(description: String): String {
     } catch (e: NumberFormatException) {
         return ""
     }
-    if (maxCost == 0.0) return "Any good with price 0.0"
     return nameMaxCost
 }
 
