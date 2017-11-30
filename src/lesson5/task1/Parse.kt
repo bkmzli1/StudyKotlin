@@ -142,8 +142,8 @@ fun flattenPhoneNumber(phone: String): String {
  */
 fun bestLongJump(jumps: String): Int {
     if (jumps.isEmpty()) return -1
-    val numbers = "0123456789"
-    if (jumps in numbers) return -1
+    val number = "0123456789"
+    if (jumps in number) return -1
     val list = jumps.trim().split(" ")
     var maxResult = -1
     for (el in list) {
