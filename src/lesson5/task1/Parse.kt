@@ -126,8 +126,7 @@ fun flattenPhoneNumber(phone: String): String {
         if (el in number || el == '+') result += el
         else if (el != '(' && el != ')' && el != ' ' && el != '-') return ""
     }
-    if (result.isEmpty()) return ""
-    else if (result.first() == '+' && result.length == 1) return ""
+    if (result.first() == '+' && result.length == 1) return ""
     else return result
 }
 
@@ -143,12 +142,12 @@ fun flattenPhoneNumber(phone: String): String {
  */
 fun bestLongJump(jumps: String): Int {
     if (jumps.isEmpty()) return -1
-    val number = "0123456789"
-    if (number in jumps) return -1
+    val numbers = "0123456789"
+    if (jumps in numbers) return -1
     val list = jumps.trim().split(" ")
     var maxResult = -1
     for (el in list) {
-        if (el.isNotEmpty() && el[0] in number) {
+        if (el.isNotEmpty() && el[0] in '0'..'9') {
             if (el.toInt() > maxResult)
                 maxResult = el.toInt()
         } else if (el == " " || el == "-" || el == "%" || el == "") continue
@@ -272,15 +271,16 @@ fun fromRoman(roman: String): Int {
     var elNumb = 0
     while (elNumb < roman.length) {
         val el = roman[elNumb].toString()
+        val nextEl = roman[elNumb + 1].toString()
         if (el in romAbc) {
             if (elNumb < roman.length - 1 &&
-                    ((el == "I" && roman[elNumb + 1].toString() == "V") ||
-                            (el == "I" && roman[elNumb + 1].toString() == "X") ||
-                            (el == "X" && roman[elNumb + 1].toString() == "L") ||
-                            (el == "X" && roman[elNumb + 1].toString() == "C") ||
-                            (el == "C" && roman[elNumb + 1].toString() == "D") ||
-                            (el == "C" && roman[elNumb + 1].toString() == "M"))) {
-                number += romNumb[romAbc.indexOf(el + roman[elNumb + 1].toString())]
+                    ((el == "I" && nextEl == "V") ||
+                            (el == "I" && nextEl == "X") ||
+                            (el == "X" && nextEl == "L") ||
+                            (el == "X" && nextEl == "C") ||
+                            (el == "C" && nextEl == "D") ||
+                            (el == "C" && nextEl == "M"))) {
+                number += romNumb[romAbc.indexOf(el + nextEl)]
                 elNumb++
             } else {
                 number += romNumb[romAbc.indexOf(el)]
