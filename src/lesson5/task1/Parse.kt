@@ -282,12 +282,10 @@ fun fromRoman(roman: String): Int {
                         (el == "C" && nextEl == "M"))) {
                     number += romNumb[romAbc.indexOf(el + nextEl)]
                     elNumb++
-                } else {
+                } else
                     number += romNumb[romAbc.indexOf(el)]
-                }
-            } else {
+            } else
                 number += romNumb[romAbc.indexOf(el)]
-            }
         } else return -1
         elNumb++
     }
