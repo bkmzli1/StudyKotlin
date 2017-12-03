@@ -222,8 +222,8 @@ fun findNearestCirclePair(vararg circles: Circle): Pair<Circle, Circle> {
  * построить окружность, описанную вокруг треугольника - эквивалентная задача).
  */
 fun circleByThreePoints(a: Point, b: Point, c: Point): Circle {
-    val point = bisectorByPoints(a, b).crossPoint(bisectorByPoints(b, c))
-    return Circle(point,point.distance(a))
+    val center = bisectorByPoints(a, b).crossPoint(bisectorByPoints(a, c))
+    return Circle(center, center.distance(a))
 }
 
 
@@ -238,25 +238,4 @@ fun circleByThreePoints(a: Point, b: Point, c: Point): Circle {
  * три точки данного множества, либо иметь своим диаметром отрезок,
  * соединяющий две самые удалённые точки в данном множестве.
  */
-fun minContainingCircle(vararg points: Point): Circle {
-    if (points.isEmpty()) IllegalArgumentException("")
-    if (points.size == 1) return Circle(points[0], 0.0)
-    if (points.size == 2) return circleByDiameter(Segment(points[0], points[1]))
-    var minimumCicle = circleByThreePoints(points[0], points[1], points[2])
-    var radius = Double.MAX_VALUE
-    var have: Boolean
-    for (first in 0 until points.size)
-        for (second in first + 1 until points.size)
-            for (third in second + 1 until points.size)
-                if ((first != second) && (second != third) && (first != third)) {
-                    have = true
-                    val cicle = circleByThreePoints(points[first], points[second], points[third])
-                    for (i1 in 0 until points.size)
-                        if (!cicle.contains(points[i1])) have = false
-                    if ((radius > cicle.radius) && have) {
-                        radius = cicle.radius
-                        minimumCicle = cicle
-                    }
-                }
-    return minimumCicle
-}
+fun minContainingCircle(vararg points: Point): Circle = TODO()
