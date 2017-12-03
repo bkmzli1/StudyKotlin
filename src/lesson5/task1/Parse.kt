@@ -117,9 +117,13 @@ fun dateDigitToStr(digital: String): String {
  * Все символы в номере, кроме цифр, пробелов и +-(), считать недопустимыми.
  * При неверном формате вернуть пустую строку
  */
+val number = "0123456789"
 fun flattenPhoneNumber(phone: String): String {
-    if (phone.isEmpty() || phone.indexOf('+') > 0 || phone == " ") return ""
-    val number = "0123456789"
+    if (phone.isEmpty() || phone.indexOf('+') > 0) return ""
+    var containNumb = 0
+    for (i in phone)
+        if (i in number) containNumb++
+    if (containNumb == 0) return ""
     var result = ""
     for (el in phone) {
         if (el in number || el == '+') result += el
