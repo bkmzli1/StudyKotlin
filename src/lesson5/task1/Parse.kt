@@ -118,7 +118,7 @@ fun dateDigitToStr(digital: String): String {
  * При неверном формате вернуть пустую строку
  */
 fun flattenPhoneNumber(phone: String): String {
-    if (phone.isEmpty() || phone.indexOf('+') > 0 || phone.length < 2) return ""
+    if (phone.isEmpty() || phone.indexOf('+') > 0 || phone == " ") return ""
     val number = "0123456789"
     var result = ""
     for (el in phone) {
