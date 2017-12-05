@@ -83,7 +83,7 @@ data class Circle(val center: Point, val radius: Double) {
      *
      * Вернуть true, если и только если окружность содержит данную точку НА себе или ВНУТРИ себя
      */
-    fun contains(p: Point): Boolean = center.distance(p) <= radius
+    fun contains(p: Point): Boolean = center.distance(p) <= radius + 10e-10
 }
 
 /**
@@ -222,7 +222,7 @@ fun findNearestCirclePair(vararg circles: Circle): Pair<Circle, Circle> {
  * построить окружность, описанную вокруг треугольника - эквивалентная задача).
  */
 fun circleByThreePoints(a: Point, b: Point, c: Point): Circle {
-    val center = bisectorByPoints(a, b).crossPoint(bisectorByPoints(a, c))
+    val center = bisectorByPoints(a, b).crossPoint(bisectorByPoints(b, c))
     return Circle(center, center.distance(a))
 }
 
@@ -238,4 +238,24 @@ fun circleByThreePoints(a: Point, b: Point, c: Point): Circle {
  * три точки данного множества, либо иметь своим диаметром отрезок,
  * соединяющий две самые удалённые точки в данном множестве.
  */
-fun minContainingCircle(vararg points: Point): Circle = TODO()
+fun minContainingCircle(vararg points: Point): Circle {
+    if (points.isEmpty()) IllegalArgumentException("")
+    if (points.size == 1) return Circle(points[0], 0.0)
+    var minimumCicle = circleByThreePoints(points[0], points[1], points[2])
+    var radius = Double.MAX_VALUE
+    var contains: Boolean
+    for (first in 0 until points.size)
+        for (second in first + 1 until points.size)
+            for (third in second + 1 until points.size)
+                if ((first != second) && (second != third) && (first != third)) {
+                    contains = true
+                    val cicle = circleByThreePoints(points[first], points[second], points[third])
+                    for (i in 0 until points.size)
+                        if (!cicle.contains(points[i])) contains = false
+                    if ((radius > cicle.radius) && contains) {
+                        radius = cicle.radius
+                        minimumCicle = cicle
+                    }
+                }
+    return minimumCicle
+}

@@ -240,7 +240,6 @@ fun factorizeToString(n: Int): String = factorize(n).joinToString(separator = "*
  * например: n = 100, base = 4 -> (1, 2, 1, 0) или n = 250, base = 14 -> (1, 3, 12)
  */
 fun convert(n: Int, base: Int): List<Int> {
-
     var nCopy = n
     val newN = mutableListOf<Int>()
     while (nCopy > 0) {
@@ -341,23 +340,23 @@ val units2 = listOf("один", "два", "три", "четыре", "пять", 
  * 23964 = "двадцать три тысячи девятьсот шестьдесят четыре"
  */
 
-fun russianMiddle(middle: Int, hundred: List<String>, ten: List<String>, ten1: List<String>, units: List<String>): List<String> {
+fun russianMiddle(middle: Int, unit: List<String>): List<String> {
     val result = mutableListOf<String>()
     if (middle / 100 >= 1) {
         val hd = middle / 100
-        result.add(hundred[hd - 1])
+        result.add(hundreds[hd - 1])
     }
     if (middle % 100 / 10 == 1) {
         val tn1 = middle % 10
-        result.add(ten1[tn1])
+        result.add(tens2[tn1])
     } else if (middle % 100 / 10 == 0) {
         val un = middle % 10
-        if (un >= 1) result.add(units[un - 1])
+        if (un >= 1) result.add(unit[un - 1])
     } else {
         val tn = middle % 100 / 10
-        result.add(ten[tn - 2])
+        result.add(tens[tn - 2])
         val un = middle % 10
-        if (un >= 1) result.add(units[un - 1])
+        if (un >= 1) result.add(unit[un - 1])
     }
     return result
 }
@@ -366,12 +365,12 @@ fun russian(n: Int): String {
     val result = mutableListOf<String>()
     val part1 = n / 1000
     if (part1 > 0) {
-        result.addAll(russianMiddle(part1, hundreds, tens, tens2, units))
+        result.addAll(russianMiddle(part1, units))
         if ((part1 % 10 == 1) && (part1 / 10 % 10 != 1)) result.add("тысяча")
         else if (!(part1 % 100 / 10 == 1) && (part1 % 10 == 2 || part1 % 10 == 3 || part1 % 10 == 4)) result.add("тысячи")
         else result.add("тысяч")
     }
     val part2 = n % 1000
-    result.addAll(russianMiddle(part2, hundreds, tens, tens2, units2))
+    result.addAll(russianMiddle(part2, units2))
     return result.joinToString(separator = " ")
 }

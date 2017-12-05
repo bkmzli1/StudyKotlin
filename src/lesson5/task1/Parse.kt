@@ -117,7 +117,7 @@ fun dateDigitToStr(digital: String): String {
  * Все символы в номере, кроме цифр, пробелов и +-(), считать недопустимыми.
  * При неверном формате вернуть пустую строку
  */
-val number = "0123456789"
+val number = '0'..'9'
 fun flattenPhoneNumber(phone: String): String {
     if (phone.isEmpty() || phone.indexOf('+') > 0) return ""
     var containNumb = 0
@@ -129,8 +129,7 @@ fun flattenPhoneNumber(phone: String): String {
         if (el in number || el == '+') result += el
         else if (el != '(' && el != ')' && el != ' ' && el != '-') return ""
     }
-    if (result.first() == '+' && result.length == 1) return ""
-    else return result
+    return result
 }
 
 /**
@@ -241,6 +240,7 @@ fun mostExpensive(description: String): String {
         val parts = description.split("; ")
         for (el in parts) {
             val product = el.split(" ")
+            if (product.size != 2) return ""
             val maxOfParts = product[1].toDouble()
             if (maxOfParts >= maxCost) {
                 maxCost = maxOfParts
