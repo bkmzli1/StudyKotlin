@@ -2,7 +2,6 @@
 
 package lesson6.task1
 
-import lesson1.task1.seconds
 import lesson1.task1.sqr
 
 /**
@@ -15,6 +14,10 @@ data class Point(val x: Double, val y: Double) {
      * Рассчитать (по известной формуле) расстояние между двумя точками
      */
     fun distance(other: Point): Double = Math.sqrt(sqr(x - other.x) + sqr(y - other.y))
+    override fun hashCode(): Int = super.hashCode()
+    
+    override fun equals(other: Any?) =
+            other is Point && (Math.abs(x - other.x) <= 10e-10) && (Math.abs(y - other.y) <= 10e-10)
 }
 
 /**
@@ -75,8 +78,10 @@ data class Circle(val center: Point, val radius: Double) {
      * расстояние между их центрами минус сумма их радиусов.
      * Расстояние между пересекающимися окружностями считать равным 0.0.
      */
-    fun distance(other: Circle): Double = if (center.distance(other.center) <= radius + other.radius) 0.0 else
-        center.distance(other.center) - radius - other.radius
+    fun distance(other: Circle): Double =
+            if (center.distance(other.center) - radius - other.radius <= 0) 0.0
+            else center.distance(other.center) - radius - other.radius
+
 
     /**
      * Тривиальная
@@ -109,11 +114,11 @@ data class Segment(val begin: Point, val end: Point) {
 fun diameter(vararg points: Point): Segment {
     if (points.size < 2) throw IllegalArgumentException("")
     var maxDistance = 0.0
-    var maxSegment = Segment(points[0], points[0])
+    var maxSegment = Segment(points[0], points[1])
     for (first in 0 until points.size)
-        for (second in 1 until points.size) {
+        for (second in first + 1 until points.size) {
             val distBetweenPoints = points[first].distance(points[second])
-            if (first != second && distBetweenPoints > maxDistance) {
+            if (distBetweenPoints > maxDistance) {
                 maxDistance = distBetweenPoints
                 maxSegment = Segment(points[first], points[second])
             }
@@ -150,8 +155,8 @@ class Line private constructor(val b: Double, val angle: Double) {
      * Для этого необходимо составить и решить систему из двух уравнений (каждое для своей прямой)
      */
     fun crossPoint(other: Line): Point {
-        val x = (b * Math.cos(other.angle) - other.b * Math.cos(angle)) / Math.sin(other.angle - angle)
-        val y = (x * Math.sin(other.angle) + other.b) / Math.cos(other.angle)
+        val x = (other.b * Math.cos(angle) - b * Math.cos(other.angle)) / Math.sin(angle - other.angle)
+        val y = (b * Math.sin(other.angle) - other.b * Math.sin(angle)) / Math.sin(other.angle - angle)
         return Point(x, y)
     }
 
@@ -180,7 +185,7 @@ fun lineBySegment(s: Segment): Line = lineByPoints(s.begin, s.end)
  */
 fun lineByPoints(a: Point, b: Point): Line =
         if (Math.atan((a.y - b.y) / (a.x - b.x)) < 0.0) Line(a, Math.PI + Math.atan((a.y - b.y) / (a.x - b.x)))
-        else Line(a, +Math.atan((a.y - b.y) / (a.x - b.x)))
+        else Line(a, Math.atan((a.y - b.y) / (a.x - b.x)))
 
 /**
  * Сложная
