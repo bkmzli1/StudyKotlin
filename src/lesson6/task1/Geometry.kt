@@ -242,24 +242,19 @@ fun circleByThreePoints(a: Point, b: Point, c: Point): Circle {
  * три точки данного множества, либо иметь своим диаметром отрезок,
  * соединяющий две самые удалённые точки в данном множестве.
  */
-fun minContainingCircle(vararg points: Point): Circle {
-    if (points.isEmpty()) IllegalArgumentException("")
-    if (points.size == 1) return Circle(points[0], 0.0)
-    var minimumCicle = circleByThreePoints(points[0], points[1], points[2])
-    var radius = Double.MAX_VALUE
-    var contains: Boolean
-    for (first in 0 until points.size)
-        for (second in first + 1 until points.size)
-            for (third in second + 1 until points.size)
-                if ((first != second) && (second != third) && (first != third)) {
-                    contains = true
-                    val cicle = circleByThreePoints(points[first], points[second], points[third])
-                    for (i in 0 until points.size)
-                        if (!cicle.contains(points[i])) contains = false
-                    if ((radius > cicle.radius) && contains) {
-                        radius = cicle.radius
-                        minimumCicle = cicle
-                    }
-                }
-    return minimumCicle
-}
+fun minContainingCircle(vararg points: Point): Circle =
+        when {
+            points.isEmpty() -> throw IllegalArgumentException()
+            points.size == 1 -> Circle(points[0], 0.0)
+            else -> {
+                val diameter = diameter(*points)
+                val minimumCircle = circleByDiameter(diameter)
+                var furtherPoint = minimumCircle.center
+                for (p in points)
+                    if (!minimumCircle.contains(p) && minimumCircle.center.distance(p) > minimumCircle.center.distance(furtherPoint))
+                        furtherPoint = p
+                if (furtherPoint != minimumCircle.center)
+                    circleByThreePoints(diameter.end, diameter.begin, furtherPoint)
+                else minimumCircle
+            }
+        }
