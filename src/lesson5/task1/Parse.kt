@@ -2,6 +2,8 @@
 
 package lesson5.task1
 
+import java.util.*
+
 /**
  * Пример
  *
@@ -118,6 +120,7 @@ fun dateDigitToStr(digital: String): String {
  * При неверном формате вернуть пустую строку
  */
 val number = '0'..'9'
+
 fun flattenPhoneNumber(phone: String): String {
     if (phone.isEmpty() || phone.indexOf('+') > 0) return ""
     var containNumb = 0
@@ -329,4 +332,43 @@ fun fromRoman(roman: String): Int {
  * IllegalArgumentException должен бросаться даже если ошибочная команда не была достигнута в ходе выполнения.
  *
  */
-fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> = TODO()
+
+fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
+    var brackets = 0
+    for (i in 0 until commands.length) {
+        if (commands[i] == '[') brackets++
+        else if (commands[i] == ']') brackets--
+        if (brackets < 0) throw IllegalArgumentException()
+    }
+    if (brackets != 0) throw IllegalArgumentException()
+    val elements = MutableList(cells) { 0 }
+    val listOfCycles = ArrayDeque<Int>()
+    var operationsCount = 0
+    var cell = cells / 2
+    var counter = 0
+    while (counter < commands.length && operationsCount != limit) {
+        if (commands[counter] == '>') cell++
+        else if (commands[counter] == '<') cell--
+        else if (commands[counter] == ' ')
+        else if (commands[counter] == '+') elements[cell]++
+        else if (commands[counter] == '-') elements[cell]--
+        else if (commands[counter] == '[') {
+            if (elements[cell] == 0) {
+                var openCycles = 0
+                while (counter != commands.length) {
+                    counter++
+                    if (commands[counter] == '[') openCycles++
+                    if (commands[counter] == ']') openCycles--
+                    if (openCycles == -1) break
+                }
+            } else listOfCycles.addFirst(counter)
+        } else if (commands[counter] == ']') {
+            if (elements[cell] != 0) counter = listOfCycles.peekFirst()
+            else listOfCycles.removeFirst()
+        } else throw IllegalArgumentException()
+        if (cell >= cells || cell < 0) throw IllegalStateException()
+        operationsCount++
+        counter++
+    }
+    return elements
+}

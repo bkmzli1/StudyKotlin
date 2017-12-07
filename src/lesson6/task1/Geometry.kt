@@ -90,6 +90,9 @@ data class Circle(val center: Point, val radius: Double) {
  * Отрезок между двумя точками
  */
 data class Segment(val begin: Point, val end: Point) {
+    fun center(): Point =
+            Point(begin.x + (end.x - begin.x) / 2, begin.y + (end.y - begin.y) / 2)
+
     override fun equals(other: Any?) =
             other is Segment && (begin == other.begin && end == other.end || end == other.begin && begin == other.end)
 
@@ -168,24 +171,25 @@ class Line private constructor(val b: Double, val angle: Double) {
  *
  * Построить прямую по отрезку
  */
-fun lineBySegment(s: Segment): Line = if (s.begin.x - s.end.x == 0.0) Line(Point(s.begin.x, s.begin.y), Math.PI / 2)
-else Line(Point(s.begin.x, s.begin.y), Math.atan((s.begin.y - s.end.y) / (s.begin.x - s.end.x)))
-
+fun lineBySegment(s: Segment): Line = lineByPoints(s.begin, s.end)
 
 /**
  * Средняя
  *
  * Построить прямую по двум точкам
  */
-fun lineByPoints(a: Point, b: Point): Line = lineBySegment(Segment(a, b))
+fun lineByPoints(a: Point, b: Point): Line =
+        if (Math.atan((a.y - b.y) / (a.x - b.x)) < 0.0) Line(a, Math.PI + Math.atan((a.y - b.y) / (a.x - b.x)))
+        else Line(a, +Math.atan((a.y - b.y) / (a.x - b.x)))
 
 /**
  * Сложная
  *
  * Построить серединный перпендикуляр по отрезку или по двум точкам
  */
-fun bisectorByPoints(a: Point, b: Point): Line = Line(Point((a.x + b.x) / 2, (a.y + b.y) / 2),
-        ((Math.atan((a.y - b.y) / (a.x - b.x)) + Math.PI / 2)) % Math.PI)
+fun bisectorByPoints(a: Point, b: Point): Line =
+        if (lineByPoints(a, b).angle < Math.PI / 2) Line(Segment(a, b).center(), lineByPoints(a, b).angle + Math.PI / 2)
+        else Line(Segment(a, b).center(), lineByPoints(a, b).angle - Math.PI / 2)
 
 /**
  * Средняя
