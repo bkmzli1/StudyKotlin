@@ -120,15 +120,16 @@ fun dateDigitToStr(digital: String): String {
  * При неверном формате вернуть пустую строку
  */
 val number = '0'..'9'
-
+val whitelist = " ()-+"
 fun flattenPhoneNumber(phone: String): String {
     if (phone.isEmpty() || phone.indexOf('+') > 0) return ""
+
     for (i in phone)
-        if (i !in number) return ""
+        if (i !in number && i !in whitelist) return ""
     var result = ""
     for (el in phone) {
         if (el in number || el == '+') result += el
-        else if (el != '(' && el != ')' && el != ' ' && el != '-') return ""
+        else if (el !in whitelist) return ""
     }
     return result
 }
@@ -198,6 +199,7 @@ fun plusMinus(expression: String): Int {
             } else if (parts[i - 1] == "-") {
                 result -= parts[i].toInt()
             }
+            else throw IllegalArgumentException()
         }
         return result
     } catch (e: NumberFormatException) {
