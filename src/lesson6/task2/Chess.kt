@@ -34,9 +34,10 @@ data class Square(val column: Int, val row: Int) {
  * В нотации, колонки обозначаются латинскими буквами от a до h, а ряды -- цифрами от 1 до 8.
  * Если нотация некорректна, бросить IllegalArgumentException
  */
-fun square(notation: String): Square = if (notation.length != 2 || notation[0] !in 'a'..'h' || notation[1] !in '1'..'8')
-    throw IllegalArgumentException() else Square((notation[0].toInt() - 96), notation[1].toString().toInt())
-
+fun square(notation: String): Square = when {
+    notation.length != 2 || notation[0] !in 'a'..'h' || notation[1] !in '1'..'8' -> throw IllegalArgumentException()
+    else -> Square((notation[0].toInt() - 96), notation[1].toString().toInt())
+}
 
 /**
  * Простая
@@ -141,10 +142,10 @@ fun bishopMoveNumber(start: Square, end: Square): Int =
  * Если возможно несколько вариантов самой быстрой траектории, вернуть любой из них.
  */
 fun bishopTrajectory(start: Square, end: Square): List<Square> =
-        when {
-            bishopMoveNumber(start, end) == -1 -> listOf()
-            bishopMoveNumber(start, end) == 0 -> listOf(start)
-            bishopMoveNumber(start, end) == 1 -> listOf(start, end)
+        when (bishopMoveNumber(start, end)) {
+            -1 -> listOf()
+            0 -> listOf(start)
+            1 -> listOf(start, end)
             else -> {
                 val column = (start.column + end.row - start.row + end.column) / 2
                 val row = end.row - (start.column + end.row - start.row - end.column) / 2

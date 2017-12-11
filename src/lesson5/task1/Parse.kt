@@ -123,10 +123,8 @@ val number = '0'..'9'
 
 fun flattenPhoneNumber(phone: String): String {
     if (phone.isEmpty() || phone.indexOf('+') > 0) return ""
-    var containNumb = 0
     for (i in phone)
-        if (i in number) containNumb++
-    if (containNumb == 0) return ""
+        if (i !in number) return ""
     var result = ""
     for (el in phone) {
         if (el in number || el == '+') result += el
@@ -150,11 +148,13 @@ fun bestLongJump(jumps: String): Int {
     val list = jumps.trim().split(" ")
     var maxResult = -1
     for (el in list) {
-        if (el.isNotEmpty() && el[0] in '0'..'9') {
-            if (el.toInt() > maxResult)
+        try {
+            if (el.isNotEmpty() && el.toInt() > maxResult)
                 maxResult = el.toInt()
-        } else if (el == " " || el == "-" || el == "%" || el == "") continue
-        else return -1
+        } catch (e: NumberFormatException) {
+            if (el == " " || el == "-" || el == "%" || el == "") continue
+            else return -1
+        }
     }
     return maxResult
 }
@@ -347,25 +347,30 @@ fun computeDeviceCells(cells: Int, commands: String, limit: Int): List<Int> {
     var cell = cells / 2
     var counter = 0
     while (counter < commands.length && operationsCount != limit) {
-        if (commands[counter] == '>') cell++
-        else if (commands[counter] == '<') cell--
-        else if (commands[counter] == ' ')
-        else if (commands[counter] == '+') elements[cell]++
-        else if (commands[counter] == '-') elements[cell]--
-        else if (commands[counter] == '[') {
-            if (elements[cell] == 0) {
-                var openCycles = 0
-                while (counter != commands.length) {
-                    counter++
-                    if (commands[counter] == '[') openCycles++
-                    if (commands[counter] == ']') openCycles--
-                    if (openCycles == -1) break
-                }
-            } else listOfCycles.addFirst(counter)
-        } else if (commands[counter] == ']') {
-            if (elements[cell] != 0) counter = listOfCycles.peekFirst()
-            else listOfCycles.removeFirst()
-        } else throw IllegalArgumentException()
+        when (commands[counter]) {
+            '>' -> cell++
+            '<' -> cell--
+            ' ' -> {
+            }
+            '+' -> elements[cell]++
+            '-' -> elements[cell]--
+            '[' -> {
+                if (elements[cell] == 0) {
+                    var openCycles = 0
+                    while (counter != commands.length) {
+                        counter++
+                        if (commands[counter] == '[') openCycles++
+                        if (commands[counter] == ']') openCycles--
+                        if (openCycles == -1) break
+                    }
+                } else listOfCycles.addFirst(counter)
+            }
+            ']' -> {
+                if (elements[cell] != 0) counter = listOfCycles.peekFirst()
+                else listOfCycles.removeFirst()
+            }
+            else -> throw IllegalArgumentException()
+        }
         if (cell >= cells || cell < 0) throw IllegalStateException()
         operationsCount++
         counter++
