@@ -3,6 +3,7 @@
 package lesson6.task2
 
 import java.lang.Math.abs
+import lesson6.task3.*
 
 /**
  * Клетка шахматной доски. Шахматная доска квадратная и имеет 8 х 8 клеток.
@@ -24,7 +25,7 @@ data class Square(val column: Int, val row: Int) {
      * В нотации, колонки обозначаются латинскими буквами от a до h, а ряды -- цифрами от 1 до 8.
      * Для клетки не в пределах доски вернуть пустую строку
      */
-    fun notation(): String = if (!inside()) "" else (column + 96).toChar() + "$row"
+    fun notation(): String = if (!inside()) "" else ('a' + column - 1) + "$row"
 }
 
 /**
@@ -36,7 +37,7 @@ data class Square(val column: Int, val row: Int) {
  */
 fun square(notation: String): Square = when {
     notation.length != 2 || notation[0] !in 'a'..'h' || notation[1] !in '1'..'8' -> throw IllegalArgumentException()
-    else -> Square((notation[0].toInt() - 96), notation[1].toString().toInt())
+    else -> Square((notation[0] - 'a' + 1), notation[1].toString().toInt())
 }
 
 /**
@@ -232,7 +233,28 @@ fun kingTrajectory(start: Square, end: Square): List<Square> {
  * Пример: knightMoveNumber(Square(3, 1), Square(6, 3)) = 3.
  * Конь может последовательно пройти через клетки (5, 2) и (4, 4) к клетке (6, 3).
  */
-fun knightMoveNumber(start: Square, end: Square): Int = TODO()
+fun moveGraph(): Graph {
+    val g = Graph()
+    val squares = List(8) { column -> List(8) { row -> (column + 97).toChar() + (row + 1).toString() } }
+    for (listOfSquares in squares)
+        for (square in listOfSquares)
+            g.addVertex(square)
+    for (column in 0 until 8)
+        for (row in 0 until 8)
+            for (columnStep in -2..2)
+                for (rowStep in -2..2) {
+                    if (abs(columnStep) == abs(rowStep) || columnStep == 0 || rowStep == 0) continue
+                    if (column + columnStep in 0..7 && row + rowStep in 0..7)
+                        g.connect(squares[column][row],
+                                squares[column + columnStep][row + rowStep])
+                }
+    return g
+}
+//fun main(args: Array<String>){
+//    val squares = List(8) { column -> List(8) { row -> (column + 97).toChar() + (row + 1).toString() } }
+//    println(squares)
+//}
+fun knightMoveNumber(start: Square, end: Square): Int = moveGraph().bfs(start.notation(), end.notation())
 
 /**
  * Очень сложная
